@@ -12,6 +12,7 @@ from keras.optimizers import RMSprop
 import pickle
 import sys
 import heapq
+import re
 # import seaborn as sns
 # from pylab import rcParams
 
@@ -25,46 +26,58 @@ path = 'nietzsche.txt'
 text = open(path).read().lower()
 print('corpus length:', len(text))
 
-chars = sorted(list(set(text)))
-char_indices = dict((c, i) for i, c in enumerate(chars))
-indices_char = dict((i, c) for i, c in enumerate(chars))
+text = text.replace('\n', ' ')
 
-print('unique chars: %d' % len(chars))
-
-SEQUENCE_LENGTH = 40
-step = 3
+# sentences = filter(None, re.split("[\.\?\!]", text))
+words = text.split()
 sentences = []
-next_chars = []
-for i in range(0, len(text) - SEQUENCE_LENGTH, step):
-    sentences.append(text[i: i + SEQUENCE_LENGTH])
-    next_chars.append(text[i + SEQUENCE_LENGTH])
+SEQUENCE_LENGTH = 3
+next_words = []
 
+for i in range(0, len(words)-SEQUENCE_LENGTH, 1):
+    sentences.append(words[i:i+SEQUENCE_LENGTH])
+    next_words.append(words[i+SEQUENCE_LENGTH])
 print('num training examples: %d ' % len(sentences))
 
-X = np.zeros((len(sentences), SEQUENCE_LENGTH, len(chars)), dtype=np.bool)
-y = np.zeros((len(sentences), len(chars)), dtype=np.bool)
+words = sorted(list(set(words)))
+word_indices = dict((w, i) for i, w in enumerate(words))
+indices_word = dict((i, w) for i, w in enumerate(words))
+
+print('unique words: %d' % len(words))
+
+# SEQUENCE_LENGTH = 40
+# step = 3
+# sentences = []
+# next_chars = []
+# for i in range(0, len(text) - SEQUENCE_LENGTH, step):
+#     sentences.append(text[i: i + SEQUENCE_LENGTH])
+#     next_chars.append(text[i + SEQUENCE_LENGTH])
+
+
+X = np.zeros((len(sentences), SEQUENCE_LENGTH, len(words)), dtype=np.bool)
+y = np.zeros((len(sentences), len(words)), dtype=np.bool)
 for i, sentence in enumerate(sentences):
-    for t, char in enumerate(sentence):
-        X[i, t, char_indices[char]] = 1
-    y[i, char_indices[next_chars[i]]] = 1
+    for t, word in enumerate(sentence):
+        X[i, t, word_indices[word]] = 1
+    y[i, word_indices[next_words[i]]] = 1
 
+# model = Sequential()
+# model.add(LSTM(128, input_shape=(SEQUENCE_LENGTH, len(words))))
+# model.add(Dense(len(words)))
+# model.add(Activation('softmax'))
 
-model = Sequential()
-model.add(LSTM(128, input_shape=(SEQUENCE_LENGTH, len(chars))))
-model.add(Dense(len(chars)))
-model.add(Activation('softmax'))
+# optimizer = RMSprop(lr=0.01)
+# model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+# history = model.fit(X, y, validation_split=0.05, batch_size=128, epochs=5, shuffle=True).history
 
-optimizer = RMSprop(lr=0.01)
-model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
-history = model.fit(X, y, validation_split=0.05, batch_size=128, epochs=5, shuffle=True).history
-
-model.save('keras_model.h5')
-pickle.dump(history, open("history.p", "wb"))
+# model.save('keras_model.h5')
+model = load_model('keras_model.h5')
+# pickle.dump(history, open("history.p", "wb"))
 
 def prepare_input(text):
-    x = np.zeros((1, SEQUENCE_LENGTH, len(chars)))
-    for t, char in enumerate(text):
-        x[0, t, char_indices[char]] = 1.
+    x = np.zeros((1, SEQUENCE_LENGTH, len(words)))
+    for t, word in enumerate(text):
+        x[0, t, word_indices[word]] = 1.
 
     return x
 
@@ -78,36 +91,36 @@ def sample(preds, top_n=3):
 
 def predict_completion(text):
     original_text = text
-    generated = text
-    completion = ''
+    completion = []
     while True:
         x = prepare_input(text)
         preds = model.predict(x, verbose=0)[0]
         next_index = sample(preds, top_n=1)[0]
-        next_char = indices_char[next_index]
-        text = text[1:] + next_char
-        completion += next_char
+        next_word = [indices_word[next_index]]
+        text = text[1:] + next_word
+        completion += next_word
 
-        if len(original_text + completion) + 2 > len(original_text) and next_char == ' ':
+        if len(original_text + completion) + 2 > len(original_text):
             return completion
 
 def predict_completions(text, n=3):
+    text = text.split()
     x = prepare_input(text)
     preds = model.predict(x, verbose=0)[0]
     next_indices = sample(preds, n)
-    return [indices_char[idx] + predict_completion(text[1:] + indices_char[idx]) for idx in next_indices]
+    return [[indices_word[idx]] + predict_completion(text[1:] + [indices_word[idx]]) for idx in next_indices]
 
 quotes = [
-    "It is not a lack of love, but a lack of friendship that makes unhappy marriages.",
-    "That which does not kill us makes us stronger.",
-    "I'm not upset that you lied to me, I'm upset that from now on I can't believe you.",
-    "And those who were seen dancing were thought to be insane by those who could not hear the music.",
-    "It is hard enough to remember my opinions, without also remembering my reasons for them!"
+    "Truth is a",
+    "have failed to",
+    "enormous and awe-inspiring",
+    "indeed one might",
+    "which is to"
 ]
 
 for q in quotes:
-    seq = q[:40].lower()
+    seq = q.lower()
     print(seq)
-    print(predict_completions(seq, 5))
-    print()
+    print(predict_completions(seq, 10))
+    print('\n')
 

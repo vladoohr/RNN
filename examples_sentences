@@ -1,0 +1,39 @@
+questions = [
+    'What is the residential distribution of refugees in COA?',
+    'What is the change in total population numbers before and after the crisis?',
+    'What is the breakdown of refugees by place of origin at governorate level?',
+    'What are the monthly arrival trends by place of origin at governorate level?',
+    'What is the average awaiting period in COA prior to registration?'
+    'What are the demographic characteristics of the population?'
+    'What are the demographic characteristics of the population?'
+    'What are the demographic characteristics of the population?'
+    'What is the percentage of ethnic and religious minorities?'
+    'What is the percentage of ethnic and religious minorities?'
+    'What is the percentage of households with extended family members in COA?'
+    'What is the average waiting period of family reunification?'
+    'What are trends of UAM and separated children registering as new arrivals?'
+    'What are trends in family size registering as new arrivals?'
+    'What are the labor market integration prospects?'
+    'Percentage of applicants married to nationals of COA?'
+    'What is the risk of statelessness within children born in COA to single mothers?'
+    'What are the main civil registration and vital statistics issues?'
+    'What are the main civil registration and vital statistics issues?'
+    'What are the main civil registration and vital statistics issues?'
+    'What are the main civil registration and vital statistics issues?'
+    'What is the ratio of displaced population/host community?'
+    'What are the number of reported cases of refoulement?'
+    'What is the average time spent in COA prior to departure to COO?'
+    'What is the ratio of UNHCR assisted returnees and spontenous departures?'
+    'What is the percentage of returnees to pre-war place of residence?'
+    'Are families returning back to COO together?'
+    'Are families returning back to COO together?'
+    'Are there persons with specific needs requiring furhter assistance upon return to COO?'
+    'What are the main reasons for spontenous returns?'
+    'Do the returning families have family members/relatives in Syria?'
+    'Do the families who have returned to Syria have family members remaining behind in COA?'
+    'Do the families who have returned to Syria have family members remaining behind in COA?'
+    'Are there any persons in the RST pipeline that are not likely to return?'
+    'Are there applicants that could potentially be recruited to the government military service?'
+]
+
+text = ''.join(questions).lower()

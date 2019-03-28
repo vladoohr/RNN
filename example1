@@ -1,0 +1,35 @@
+Using TensorFlow backend.
+('corpus length:', 600901)
+unique chars: 59
+num training examples: 200287
+2019-03-27 10:27:35.926375: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2019-03-27 10:27:35.926402: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2019-03-27 10:27:35.926412: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+2019-03-27 10:27:35.926418: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+2019-03-27 10:27:35.926424: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+Train on 190272 samples, validate on 10015 samples
+Epoch 1/5
+190272/190272 [==============================] - 346s - loss: 2.0281 - acc: 0.4091 - val_loss: 1.7091 - val_acc: 0.4896
+Epoch 2/5
+190272/190272 [==============================] - 330s - loss: 1.6622 - acc: 0.5076 - val_loss: 1.5838 - val_acc: 0.5259
+Epoch 3/5
+190272/190272 [==============================] - 331s - loss: 1.5663 - acc: 0.5341 - val_loss: 1.5392 - val_acc: 0.5373
+Epoch 4/5
+190272/190272 [==============================] - 341s - loss: 1.5218 - acc: 0.5456 - val_loss: 1.5262 - val_acc: 0.5508
+Epoch 5/5
+190272/190272 [==============================] - 350s - loss: 1.4918 - acc: 0.5545 - val_loss: 1.5022 - val_acc: 0.5557
+it is not a lack of love, but a lack of
+['the ', 'it ', 'a ', 'more ', 'experience ']
+()
+that which does not kill us makes us str
+['ongest ', 'ength ', 'ict ', 'uction ', 'ange ']
+()
+i'm not upset that you lied to me, i'm u
+['nder ', 'pon ', 's ', 't, ', 'lself ']
+()
+and those who were seen dancing were tho
+['ught ', 'se ', 't ', 'n ', 'm ']
+()
+it is hard enough to remember my opinion
+[' of ', ', ', 's ', '. ', '\nof ']
+()
