@@ -24,6 +24,7 @@ import re
 
 path = 'nietzsche.txt'
 text = open(path).read().lower()
+# text = 'vladimir is a really big fan on bayern muchen'
 print('corpus length:', len(text))
 
 text = text.replace('\n', ' ')
@@ -61,18 +62,18 @@ for i, sentence in enumerate(sentences):
         X[i, t, word_indices[word]] = 1
     y[i, word_indices[next_words[i]]] = 1
 
-# model = Sequential()
-# model.add(LSTM(128, input_shape=(SEQUENCE_LENGTH, len(words))))
-# model.add(Dense(len(words)))
-# model.add(Activation('softmax'))
+model = Sequential()
+model.add(LSTM(128, input_shape=(SEQUENCE_LENGTH, len(words))))
+model.add(Dense(len(words)))
+model.add(Activation('softmax'))
 
-# optimizer = RMSprop(lr=0.01)
-# model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
-# history = model.fit(X, y, validation_split=0.05, batch_size=128, epochs=5, shuffle=True).history
+optimizer = RMSprop(lr=0.01)
+model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+history = model.fit(X, y, validation_split=0.05, batch_size=128, epochs=50, shuffle=True).history
 
-# model.save('keras_model.h5')
-model = load_model('keras_model.h5')
-# pickle.dump(history, open("history.p", "wb"))
+model.save('keras_model_words.h5')
+pickle.dump(history, open("history.p", "wb"))
+# model = load_model('keras_model_words.h5')
 
 def prepare_input(text):
     x = np.zeros((1, SEQUENCE_LENGTH, len(words)))
@@ -89,38 +90,36 @@ def sample(preds, top_n=3):
 
     return heapq.nlargest(top_n, range(len(preds)), preds.take)
 
-def predict_completion(text):
-    original_text = text
-    completion = []
-    while True:
-        x = prepare_input(text)
-        preds = model.predict(x, verbose=0)[0]
-        next_index = sample(preds, top_n=1)[0]
-        next_word = [indices_word[next_index]]
-        text = text[1:] + next_word
-        completion += next_word
+# def predict_completion(text):
+#     original_text = text
+#     completion = []
+#     while True:
+#         x = prepare_input(text)
+#         preds = model.predict(x, verbose=0)[0]
+#         next_index = sample(preds, top_n=1)[0]
+#         next_word = [indices_word[next_index]]
+#         text = text[1:] + next_word
+#         completion += next_word
 
-        if len(original_text + completion) + 2 > len(original_text):
-            return completion
+#         if len(original_text + completion) + 2 > len(original_text):
+#             return completion
 
 def predict_completions(text, n=3):
     text = text.split()
     x = prepare_input(text)
     preds = model.predict(x, verbose=0)[0]
     next_indices = sample(preds, n)
-    return [[indices_word[idx]] + predict_completion(text[1:] + [indices_word[idx]]) for idx in next_indices]
+    return [indices_word[idx] for idx in next_indices]
 
 quotes = [
-    "Truth is a",
-    "have failed to",
-    "enormous and awe-inspiring",
-    "indeed one might",
-    "which is to"
+    'truth is a',
+    'for suspecting that',
+    'there not ground'
 ]
 
 for q in quotes:
     seq = q.lower()
     print(seq)
-    print(predict_completions(seq, 10))
+    print(predict_completions(seq, 5))
     print('\n')
 
